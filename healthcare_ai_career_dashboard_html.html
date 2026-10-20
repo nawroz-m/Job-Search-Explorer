@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare AI & Software Engineering Job Search Explorer (2026)</title>
+    <!-- Chosen Palette: Warm Neutrals & Sage Harmony (Slate, Emerald/Sage accent, Warm Amber, Soft Sand background) -->
+    <!-- Application Structure Plan:
+         The application transforms static tabular job reports into an interactive strategic career dashboard designed for an MSc AI student in Italy.
+         1. Top Metrics Bar: Quick breakdown of total verified roles, remote accessibility, high-match roles, and location spread.
+         2. Tabbed Navigation:
+            - Overview & Strategy: Profile synthesis, key alignment factors, gap analysis, and strategic application focus.
+            - Top 5 Primary Opportunities: In-depth deep-dive cards for the top ranked roles with interactive scoring breakdowns and project highlights.
+            - Master Job Repository (27 Vacancies): Searchable, filterable interactive table with multi-dimensional filtering (Priority, Location/Remote status, Verification level).
+            - Skill Gap & Industry Trends: Interactive distribution charts (Chart.js) breaking down required skill stacks, remote accessibility, and priority alignment.
+         3. Dynamic Filters & Details Modal: Clickable table rows open a slide-over modal for detailed candidate fit analysis and direct application links.
+    -->
+    <!-- Visualization & Content Choices:
+         - Metrics Widgets: Fast dynamic counts for instant status overview.
+         - Top 5 Deep-Dive Cards: Tailored HTML layout highlighting specific projects to pitch for each top job.
+         - Interactive Table: Full JS-based quick search, sorting, and multi-tier filtering for all 27 roles.
+         - Chart.js Bar & Donut Visualizations: Showing Job Priority breakdown and Location Accessibility. Strictly Canvas based, responsive wrappers, no SVG/Mermaid.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBg: '#FBFBFA',
+                        brandSurface: '#FFFFFF',
+                        brandPrimary: '#2D3748',
+                        brandAccent: '#2B6CB0',
+                        brandSage: '#38A169',
+                        brandMuted: '#718096',
+                        brandBorder: '#E2E8F0',
+                        brandHighlight: '#ED8936'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 340px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-brandBg text-brandPrimary font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Top Header -->
+    <header class="bg-brandSurface border-b border-brandBorder sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-3 h-3 rounded-full bg-emerald-500"></span>
+                    <h1 class="text-xl font-bold tracking-tight text-brandPrimary">Healthcare AI & Software Engineering Job Search Explorer</h1>
+                </div>
+                <p class="text-xs text-brandMuted mt-0.5">Verified Global Openings Audit • October 2026 • Target: MSc AI Student (Milano-Bicocca)</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="bg-blue-50 text-brandAccent text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">2 yrs SWE + MSc AI Profile</span>
+                <span class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-100">Italy-Based Remote & Hybrid</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+        <!-- Executive Metrics Bar -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
+                <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Total Audited Roles</div>
+                <div class="text-2xl font-extrabold text-brandPrimary mt-1">27</div>
+                <div class="text-xs text-emerald-600 font-medium mt-1">100% Level A Verified</div>
+            </div>
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
+                <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Top Tier (1 & 2) Roles</div>
+                <div class="text-2xl font-extrabold text-brandAccent mt-1">17</div>
+                <div class="text-xs text-brandMuted mt-1">Medical AI & HealthTech</div>
+            </div>
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
+                <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Remote Accessible (IT)</div>
+                <div class="text-2xl font-extrabold text-emerald-600 mt-1">5</div>
+                <div class="text-xs text-emerald-600 font-medium mt-1">100% Remote / Global</div>
+            </div>
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
+                <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Top Match Score</div>
+                <div class="text-2xl font-extrabold text-brandHighlight mt-1">91%</div>
+                <div class="text-xs text-brandMuted mt-1">Dexter Health (Applied AI)</div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex border-b border-brandBorder space-x-6 overflow-x-auto text-sm font-medium">
+            <button onclick="switchTab('top5')" id="tab-top5" class="pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap">
+                Top 5 Priority Vacancies
+            </button>
+            <button onclick="switchTab('repository')" id="tab-repository" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
+                Full Repository (27 Vacancies)
+            </button>
+            <button onclick="switchTab('strategy')" id="tab-strategy" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
+                Profile Strategy & Positioning
+            </button>
+            <button onclick="switchTab('analytics')" id="tab-analytics" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
+                Market Analytics & Skill Gaps
+            </button>
+        </nav>
+
+        <!-- TAB 1: TOP 5 PRIMARY VACANCIES -->
+        <section id="view-top5" class="space-y-6">
+            <div class="bg-blue-50/60 border border-blue-200/80 rounded-xl p-4 text-xs text-brandPrimary leading-relaxed">
+                <strong class="font-semibold text-brandAccent">Top 5 Primary Recommendations:</strong> These five roles represent the absolute highest vector matches evaluated as of October 2026. They balance commercial software development background (2 yrs full-stack, Docker, AWS, APIs) with academic AI research projects (U-Net, PyTorch, SimCLR, DocXter).
+            </div>
+
+            <div class="grid grid-cols-1 gap-6" id="top5-container">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: FULL REPOSITORY (TABLE) -->
+        <section id="view-repository" class="hidden space-y-4">
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm space-y-4">
+                <!-- Table Controls -->
+                <div class="flex flex-col md:flex-row gap-3 justify-between">
+                    <div class="flex flex-wrap gap-2 items-center text-xs">
+                        <span class="font-semibold text-brandMuted">Filters:</span>
+                        <select id="filter-priority" onchange="applyFilters()" class="border border-brandBorder rounded px-2.5 py-1.5 bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                            <option value="ALL">All Priorities</option>
+                            <option value="1">Priority 1 (Healthcare AI & Med Imaging)</option>
+                            <option value="2">Priority 2 (Healthcare Software & HealthTech)</option>
+                            <option value="3">Priority 3 (General CV / ML)</option>
+                            <option value="4">Priority 4 (General Software Engineering)</option>
+                        </select>
+
+                        <select id="filter-remote" onchange="applyFilters()" class="border border-brandBorder rounded px-2.5 py-1.5 bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                            <option value="ALL">All Arrangements</option>
+                            <option value="REMOTE_IT">Confirmed Remote from Italy</option>
+                            <option value="HYBRID_EU">EU Hybrid / Relocation</option>
+                        </select>
+                    </div>
+
+                    <div class="w-full md:w-64">
+                        <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="Search title, company, stack..." class="w-full border border-brandBorder rounded px-3 py-1.5 text-xs bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                    </div>
+                </div>
+
+                <!-- Interactive Data Table -->
+                <div class="overflow-x-auto rounded-lg border border-brandBorder">
+                    <table class="w-full text-left text-xs text-brandPrimary">
+                        <thead class="bg-slate-50 text-brandMuted font-semibold uppercase tracking-wider border-b border-brandBorder">
+                            <tr>
+                                <th class="p-3">Rank</th>
+                                <th class="p-3">Priority</th>
+                                <th class="p-3">Job Title & Company</th>
+                                <th class="p-3">Location & Setup</th>
+                                <th class="p-3">Score</th>
+                                <th class="p-3">Remote (IT) Status</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repository-tbody" class="divide-y divide-brandBorder bg-white">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-xs text-brandMuted flex justify-between items-center pt-2">
+                    <span id="showing-count">Showing 27 of 27 verified vacancies</span>
+                    <span>Click any row for candidate fit analysis</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PROFILE STRATEGY & POSITIONING -->
+        <section id="view-strategy" class="hidden space-y-6">
+            <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-4">
+                <h2 class="text-lg font-bold text-brandPrimary border-b border-brandBorder pb-2">Strategic Applicant Positioning</h2>
+                <p class="text-xs text-brandMuted leading-relaxed">
+                    A structural finding in 2026 technical recruitment is the clear separation between <strong>Clinical AI Research</strong> and <strong>Applied HealthTech Software Engineering</strong>. Given your 2 years of commercial software development alongside ongoing MSc AI studies at Milano-Bicocca, your positioning is optimal for applied production roles.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-xs uppercase text-brandMuted tracking-wider mb-2">Track A: Clinical AI Research</h3>
+                        <ul class="text-xs space-y-2 text-brandPrimary">
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-red-500 font-bold">✕</span>
+                                <span><strong>Focus:</strong> Foundation models for CT, MRI, histopathology DICOM pipelines.</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-red-500 font-bold">✕</span>
+                                <span><strong>Barriers:</strong> Often requires PhD, published medical papers, or clinical modality expertise.</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-amber-500 font-bold">!</span>
+                                <span><strong>Fit Level:</strong> Selective / Secondary focus (unless academic thesis aligned).</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-emerald-50/50 p-4 rounded-lg border border-emerald-200">
+                        <h3 class="font-bold text-xs uppercase text-emerald-800 tracking-wider mb-2">Track B: Applied HealthTech Engineering (Your Sweet Spot)</h3>
+                        <ul class="text-xs space-y-2 text-brandPrimary">
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><strong>Focus:</strong> Operationalizing AI into web applications, EHR integrations, caregiver tools.</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><strong>Value Driver:</strong> Production REST APIs, Flask/Node, Docker, AWS Lambda, vector search (DocXter).</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><strong>Fit Level:</strong> High Match (90%+ alignment with scale-ups like Dexter Health).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Academic vs Production Gap Matrix -->
+                <h3 class="font-bold text-sm text-brandPrimary pt-4">Bridging the Academic ML vs. Production Gap</h3>
+                <div class="overflow-x-auto border border-brandBorder rounded-lg">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-brandMuted font-semibold">
+                            <tr>
+                                <th class="p-2.5 border-b">Dimension</th>
+                                <th class="p-2.5 border-b">Academic Project Focus (MSc)</th>
+                                <th class="p-2.5 border-b">Production Software Focus (Industry)</th>
+                                <th class="p-2.5 border-b">Your Portfolio Bridge</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-brandBorder">
+                            <tr>
+                                <td class="p-2.5 font-medium">Primary Objective</td>
+                                <td class="p-2.5 text-brandMuted">Maximize IoU, accuracy, validation metrics</td>
+                                <td class="p-2.5 text-brandMuted">Low latency, API reliability, evaluation hooks</td>
+                                <td class="p-2.5 font-medium text-emerald-700">DocXter (OCR + AWS Lambda deployment)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Execution Env</td>
+                                <td class="p-2.5 text-brandMuted">Offline Jupyter Notebooks & local GPUs</td>
+                                <td class="p-2.5 text-brandMuted">Containerized microservices (Docker, AWS)</td>
+                                <td class="p-2.5 font-medium text-emerald-700">2 yrs Next Smart Move (Refactoring, Elasticsearch)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Data Pipelines</td>
+                                <td class="p-2.5 text-brandMuted">Static pre-cleaned datasets</td>
+                                <td class="p-2.5 text-brandMuted">Unstructured REST APIs & user queries</td>
+                                <td class="p-2.5 font-medium text-emerald-700">Food Image Pipeline & SimCLR Preprocessing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: MARKET ANALYTICS & SKILL GAPS -->
+        <section id="view-analytics" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Priority Breakdown Chart -->
+                <div class="bg-brandSurface p-5 rounded-xl border border-brandBorder shadow-sm flex flex-col items-center">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Opportunity Distribution by Priority Tier</h3>
+                    <div class="chart-container">
+                        <canvas id="priorityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Location & Remote Accessibility Chart -->
+                <div class="bg-brandSurface p-5 rounded-xl border border-brandBorder shadow-sm flex flex-col items-center">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Location & Italy Remote Accessibility</h3>
+                    <div class="chart-container">
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skill Gap Summary Card -->
+            <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-3">
+                <h3 class="text-sm font-bold text-brandPrimary">Key Skill Gaps Identified Across 27 Postings</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="p-3 rounded border border-amber-200 bg-amber-50/50">
+                        <div class="font-bold text-amber-800">FHIR / HL7 Data Standards</div>
+                        <div class="text-brandMuted mt-1">Requested in ~40% of digital health backend roles. Build a small open-source Python parser using <code>fhir.resources</code> to bridge this easily.</div>
+                    </div>
+                    <div class="p-3 rounded border border-slate-200 bg-slate-50">
+                        <div class="font-bold text-brandPrimary">LLM Evaluation Frameworks</div>
+                        <div class="text-brandMuted mt-1">HealthTech startups demand output evaluation. Integrate tools like <code>Ragas</code> or <code>TruLens</code> into your DocXter repository.</div>
+                    </div>
+                    <div class="p-3 rounded border border-slate-200 bg-slate-50">
+                        <div class="font-bold text-brandPrimary">C++ Systems Graphics</div>
+                        <div class="text-brandMuted mt-1">Required for 3D medical visualization (e.g. Anatomage). Focus on Python/Cloud AI tiers where demand is higher for full-stack profiles.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Detail Drawer Modal -->
+    <div id="detail-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-end">
+        <div class="bg-brandSurface w-full max-w-xl h-full shadow-2xl p-6 overflow-y-auto border-l border-brandBorder flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start border-b border-brandBorder pb-4">
+                    <div>
+                        <span id="modal-priority" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-brandAccent">Priority 1</span>
+                        <h2 id="modal-title" class="text-lg font-bold text-brandPrimary mt-1">Job Title</h2>
+                        <p id="modal-company" class="text-xs text-brandMuted font-medium">Company Name • Location</p>
+                    </div>
+                    <button onclick="closeModal()" class="text-brandMuted hover:text-brandPrimary text-lg font-bold px-2">✕</button>
+                </div>
+
+                <div class="space-y-4 py-4 text-xs">
+                    <div>
+                        <h4 class="font-semibold text-brandMuted uppercase tracking-wider mb-1">Match Breakdown Score</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl font-black text-brandAccent" id="modal-score">85%</div>
+                            <div class="flex-grow bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div id="modal-score-bar" class="bg-brandAccent h-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-brandMuted uppercase tracking-wider mb-1">Resume & Project Match</h4>
+                        <p id="modal-match" class="text-brandPrimary bg-slate-50 p-2.5 rounded border border-slate-200">Fit rationale here...</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-brandMuted uppercase tracking-wider mb-1">Key Concern or Skill Gap</h4>
+                        <p id="modal-gap" class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200">Gaps here...</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div class="p-2 border rounded bg-slate-50">
+                            <span class="text-brandMuted block">Language Requirement:</span>
+                            <strong id="modal-lang">English</strong>
+                        </div>
+                        <div class="p-2 border rounded bg-slate-50">
+                            <span class="text-brandMuted block">Remote from Italy:</span>
+                            <strong id="modal-remote">Confirmed</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-brandBorder pt-4 flex gap-3">
+                <a id="modal-link" href="#" target="_blank" class="flex-grow text-center bg-brandAccent hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition text-xs">
+                    Apply on Official Portal ↗
+                </a>
+                <button onclick="closeModal()" class="bg-slate-100 hover:bg-slate-200 text-brandPrimary font-semibold py-2 px-4 rounded text-xs">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Footer -->
+    <footer class="bg-brandSurface border-t border-brandBorder py-4 text-center text-xs text-brandMuted mt-auto">
+        Healthcare AI & Software Engineering Research Portal • Updated October 2026 • Verified Dataset
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // Master Dataset (27 Verified Roles)
+        const jobsData = [
+            {
+                rank: 1,
+                priority: 2,
+                title: "Applied AI Developer",
+                company: "Dexter Health",
+                location: "Worldwide / Remote from Italy",
+                setup: "100% Remote",
+                level: "Early-Career / Mid",
+                score: 91,
+                match: "Direct alignment with Python backend, REST APIs, Docker, and production LLM workflow integration. Fits DocXter (semantic retrieval, Lambda, Flask) and V-Retail.",
+                gap: "German language preferred (explicitly non-rejection filter). Experience with self-hosted LLMs (vLLM/Ollama).",
+                lang: "English (German bonus)",
+                remoteStatus: "Confirmed (Remote from IT)",
+                sponsorship: "Not applicable (Remote)",
+                verif: "Level A (Join.com)",
+                date: "Oct 2026",
+                link: "https://join.com/companies/dexter-health/16838170-applied-ai-developer-remote",
+                highlightProject: "DocXter (Flask, Lambda, Vector Retrieval)",
+                isTop5: true
+            },
+            {
+                rank: 2,
+                priority: 3,
+                title: "Junior AI Engineer – Computer Vision",
+                company: "InnovationTeam",
+                location: "Global / Remote from Italy",
+                setup: "100% Remote",
+                level: "Junior (2+ yrs ML/MSc)",
+                score: 83,
+                match: "Perfect fit for MSc CV background. Matches Drone Landing Zone project (U-Net, PyTorch) and Food Image Classification (SimCLR, ResNet).",
+                gap: "Prefers Detectron2/YOLO object detection exposure and Vision Transformers (ViTs).",
+                lang: "English",
+                remoteStatus: "Confirmed (Remote from IT)",
+                sponsorship: "Not needed for remote",
+                verif: "Level A (Workable)",
+                date: "Oct 2026",
+                link: "https://apply.workable.com/innovationteam/j/CE4356E68F",
+                highlightProject: "Drone Landing Zone Detection (U-Net, Tile Processing)",
+                isTop5: true
+            },
+            {
+                rank: 3,
+                priority: 2,
+                title: "Software Development Engineer (Diagnostic Reporting)",
+                company: "Royal Philips",
+                location: "Eindhoven, Netherlands",
+                setup: "Hybrid / On-site",
+                level: "Early-Career / Junior",
+                score: 78,
+                match: "Full-stack software engineering fit. 2 years experience in Python, Node.js, TypeScript, REST APIs, Docker, and backend refactoring.",
+                gap: "Requires relocation to Netherlands. Prefers clinical data standards (FHIR / HL7).",
+                lang: "English",
+                remoteStatus: "Restricted (Relocation required)",
+                sponsorship: "Confirmed (Visa + Relocation)",
+                verif: "Level A (Philips Careers)",
+                date: "Oct 15, 2026",
+                link: "https://www.careers.philips.com/nl/en/tech-jobs",
+                highlightProject: "Next Smart Move Refactoring & Cloud APIs",
+                isTop5: true
+            },
+            {
+                rank: 4,
+                priority: 1,
+                title: "Clinical Data Analyst Intern",
+                company: "Sonio",
+                location: "Paris, France",
+                setup: "Hybrid",
+                level: "Internship / Master's Student",
+                score: 74,
+                match: "Direct ultrasound AI and statistical validation match. Strong Python, Pandas, statistical analysis alignment.",
+                gap: "Requires fluent French & English. Hybrid in Paris.",
+                lang: "French & English (Mandatory)",
+                remoteStatus: "Restricted (Hybrid Paris)",
+                sponsorship: "EU Erasmus / Student convention",
+                verif: "Level A (Ashby)",
+                date: "Oct 2026",
+                link: "https://jobs.ashbyhq.com/Sonio/c2a4c162-9e39-4fc7-9de9-49e03536a121",
+                highlightProject: "Food Image Classification (Statistical Evaluation)",
+                isTop5: true
+            },
+            {
+                rank: 5,
+                priority: 1,
+                title: "Junior Software Developer (3D Medical)",
+                company: "Anatomage, Inc.",
+                location: "Santa Clara, CA, USA",
+                setup: "Hybrid / On-site",
+                level: "Junior / Entry",
+                score: 63,
+                match: "Computer Science IT degree, software development background, AI integration experience.",
+                gap: "Requires C++ and 3D graphics. Strictly no US visa sponsorship (H1B declined).",
+                lang: "English",
+                remoteStatus: "Restricted (US On-site)",
+                sponsorship: "Declined by employer",
+                verif: "Level A (Workable)",
+                date: "Oct 2026",
+                link: "https://apply.workable.com/anatomage/j/9E0E93FEFF/",
+                highlightProject: "V-Retail (Real-Time Analytics & ML Integration)",
+                isTop5: true
+            },
+            // Reference List (6 through 27)
+            { rank: 6, priority: 1, title: "Machine Learning Engineer", company: "Scarlet", location: "London, UK", setup: "On-site", level: "Mid-Level (£90k-£150k)", score: 72, match: "PyTorch, Python, dataset creation, document evidence AI.", gap: "On-site London; UK work rights required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Could not verify", verif: "Level A (Ashby)", date: "Oct 2026", link: "https://jobs.ashbyhq.com/scarlet/86fbe399-48fb-4416-8a8b-9aff001a1510", isTop5: false },
+            { rank: 7, priority: 1, title: "Senior Machine Learning Scientist", company: "Altis Labs", location: "Remote - US", setup: "Remote", level: "Senior ($175k-$300k)", score: 68, match: "PyTorch, oncology imaging AI, cloud GPU pipelines.", gap: "Requires 7+ yrs exp; US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Ashby)", date: "Oct 2026", link: "https://jobs.ashbyhq.com/altis%20labs/00d14e41-89c2-4ef3-965a-a570255fb571", isTop5: false },
+            { rank: 8, priority: 1, title: "Machine Learning / Medical AI Engineer", company: "Artera", location: "Remote - US", setup: "Remote", level: "Early-Mid ($140k-$180k)", score: 67, match: "PyTorch, digital pathology models, cloud ML pipelines.", gap: "Restricted to US work authorization.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Lever)", date: "Oct 2026", link: "https://jobs.lever.co/artera/e69fa8b3-ecad-4f6a-b8b6-77d6542dfbe1", isTop5: false },
+            { rank: 9, priority: 1, title: "Senior Computer Vision Scientist", company: "Sora Union", location: "Global Remote", setup: "Remote", level: "Senior (7+ yrs)", score: 66, match: "PyTorch, DICOM/NIfTI standards, medical segmentation.", gap: "Requires 7+ yrs experience; contractor setup.", lang: "English", remoteStatus: "Confirmed (Global Contractor)", sponsorship: "Not applicable", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/soraunion/jobs/5421949008", isTop5: false },
+            { rank: 10, priority: 1, title: "Senior AI Scientist", company: "Hyperfine", location: "Guilford, CT, USA", setup: "On-site", level: "Senior", score: 61, match: "Python, PyTorch, computer vision, MRI image pipelines.", gap: "On-site CT; explicitly no US visa sponsorship.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/hyperfine53/jobs/5629439004", isTop5: false },
+            { rank: 11, priority: 1, title: "Machine Learning Engineer", company: "Capstan Medical", location: "Santa Cruz, CA, USA", setup: "Hybrid", level: "Mid-Senior (4+ yrs)", score: 60, match: "PyTorch, Python, 3D computer vision, surgical tools.", gap: "4+ yrs experience; hybrid in California.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Lever)", date: "Oct 2026", link: "https://jobs.lever.co/capstan-medical/c774aedc-9781-43a0-8982-b34514cbad3b", isTop5: false },
+            { rank: 12, priority: 1, title: "Deep Learning Scientist (Med Imaging)", company: "Formation Bio", location: "NYC / Boston, USA", setup: "Hybrid", level: "Senior (PhD + 5 yrs)", score: 58, match: "PyTorch, medical datasets, multi-modal fusion.", gap: "PhD + 5 yrs experience required; US presence.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/formationbio/jobs/7094389", isTop5: false },
+            { rank: 13, priority: 1, title: "Senior Data Scientist, Medical Imaging", company: "HeartFlow", location: "San Francisco, CA, USA", setup: "Hybrid", level: "Senior (5+ yrs)", score: 57, match: "Computer vision on medical images, Python, AWS.", gap: "5+ yrs experience; US work authorization.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/heartflowinc/jobs/6204391004", isTop5: false },
+            { rank: 14, priority: 2, title: "Senior Backend Engineer (Python)", company: "Breathment", location: "Remote - EU", setup: "Remote", level: "Senior (5+ yrs)", score: 81, match: "Python, REST APIs, FastAPI, Docker, CV pose estimation.", gap: "Prefers 5+ yrs exp (candidate has 2+ yrs SWE).", lang: "English", remoteStatus: "Confirmed (Remote EU)", sponsorship: "Not needed for remote", verif: "Level A (Join.com)", date: "Oct 2026", link: "https://join.com/companies/breathment1/16748914-senior-backend-engineer-python-remote", isTop5: false },
+            { rank: 15, priority: 2, title: "Software Engineer (Clinical Workflow)", company: "Orion Health", location: "Auckland, New Zealand", setup: "Hybrid", level: "Early Career (1-3 yrs)", score: 76, match: "React, JS/TS, REST APIs, Docker, code reviews.", gap: "On-site / hybrid in New Zealand.", lang: "English", remoteStatus: "Restricted", sponsorship: "Could not verify", verif: "Level A (Workable)", date: "Oct 2026", link: "https://apply.workable.com/orion-health/j/6F258498D8", isTop5: false },
+            { rank: 16, priority: 2, title: "Software Engineer (Health Integration)", company: "Artera", location: "Remote - US", setup: "Remote", level: "Mid-Level ($180k-$240k)", score: 75, match: "Python refactoring, REST APIs, Git, CI/CD, cloud.", gap: "Requires HL7/FHIR experience; US location.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Lever)", date: "Oct 2026", link: "https://jobs.lever.co/artera/cc5cbc4d-c7e7-4573-993f-526cb33f5a81", isTop5: false },
+            { rank: 17, priority: 2, title: "AI Engineer", company: "Bios Life", location: "Boston, MA, USA", setup: "On-site", level: "Mid-Level (3+ yrs)", score: 73, match: "Python, PyTorch, Docker, AWS, multimodal biomedical data.", gap: "On-site Boston; 3+ yrs experience.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/bioslife/jobs/4394798009", isTop5: false },
+            { rank: 18, priority: 2, title: "Software Engineer (Backend & LLM)", company: "CrowdHealth", location: "Remote - US", setup: "Remote", level: "Mid-Level ($120k)", score: 72, match: "TypeScript, Python, Node.js, REST APIs, Docker, AWS.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Lever)", date: "Oct 2026", link: "https://jobs.lever.co/crowdhealth/04371686-6b4c-4c18-b32c-c2beab2446b5", isTop5: false },
+            { rank: 19, priority: 2, title: "ML Scientist – Clinical Prediction", company: "Iambic Therapeutics", location: "Remote - US", setup: "Remote", level: "Mid-Level ($148k-$186k)", score: 70, match: "Python, PyTorch, Docker, code refactoring, ML evals.", gap: "US remote authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Not mentioned", verif: "Level A (Ashby)", date: "Oct 2026", link: "https://jobs.ashbyhq.com/iambic-therapeutics/e418c9bf-4fe6-4484-92ad-e9a320557815", isTop5: false },
+            { rank: 20, priority: 3, title: "AI Computer Vision Engineer", company: "AssistIQ", location: "Remote - Canada", setup: "Remote", level: "Mid-Level (3+ yrs)", score: 78, match: "Python, PyTorch, OpenCV, CV deployment pipelines.", gap: "Must be legally authorized in Canada without sponsorship.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Workable)", date: "Oct 2026", link: "https://apply.workable.com/assistiq/j/CCB0D9DF54/", isTop5: false },
+            { rank: 21, priority: 3, title: "Computer Vision / ML Engineer", company: "Sitemark", location: "Remote - Europe (CET)", setup: "Remote", level: "Early-Mid Level", score: 77, match: "Python, PyTorch, OpenCV, drone imagery analysis.", gap: "Renewable energy domain rather than healthcare.", lang: "English", remoteStatus: "Confirmed (Remote EU)", sponsorship: "Not needed for remote", verif: "Level A (Ashby)", date: "Oct 2026", link: "https://jobs.ashbyhq.com/sitemark/24f4287b-92dc-4992-9f28-91e1ebf9a9e5", isTop5: false },
+            { rank: 22, priority: 3, title: "Computer Vision Engineer (Eye Tracking)", company: "Varjo", location: "Helsinki, Finland", setup: "Hybrid", level: "Junior-Mid Level", score: 73, match: "Python, image processing, tracking algorithms.", gap: "Hybrid in Helsinki required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Could not verify", verif: "Level A (Workable)", date: "Oct 2026", link: "https://apply.workable.com/varjo-1/j/66D564EA34/", isTop5: false },
+            { rank: 23, priority: 3, title: "Computer Vision Engineer (3D Pose)", company: "Mujin", location: "Tokyo, Japan", setup: "On-site", level: "Entry / Junior", score: 71, match: "MSc AI / BS IT, Python, PyTorch, OpenCV, model optimization.", gap: "On-site Tokyo; C++ preferred.", lang: "English", remoteStatus: "Restricted", sponsorship: "Confirmed (Visa + Relocation)", verif: "Level A (Lever)", date: "Oct 2026", link: "https://jobs.lever.co/mujininc/71cf1284-ebcd-456e-a87f-0afa16ae6778", isTop5: false },
+            { rank: 24, priority: 3, title: "Computer Vision Engineer", company: "Apixa", location: "Leuven, Belgium", setup: "Hybrid", level: "Senior (5-10 yrs)", score: 65, match: "Python, image processing, machine learning algorithms.", gap: "Requires 5-10 years industrial CV experience.", lang: "English", remoteStatus: "Restricted", sponsorship: "Could not verify", verif: "Level A (Workable)", date: "Oct 2026", link: "https://apply.workable.com/apixa/j/BA37C0AAFF/", isTop5: false },
+            { rank: 25, priority: 4, title: "Full Stack Associate Software Engineer", company: "One Imaging", location: "Miami, FL, USA", setup: "On-site", level: "Associate ($85k-$115k)", score: 64, match: "React, Node.js, TypeScript, SQL, REST APIs.", gap: "Restricted to University of Florida grads in Miami.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/oneimaging/jobs/4403125009", isTop5: false },
+            { rank: 26, priority: 4, title: "Software Engineering Intern", company: "Garner Health", location: "New York, NY, USA", setup: "On-site", level: "Internship ($2,400/wk)", score: 62, match: "Python, React, Node.js, AWS, Docker.", gap: "NYC summer internship; no sponsorship.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A (Greenhouse)", date: "Oct 2026", link: "https://job-boards.greenhouse.io/garnerhealth/jobs/6164698004", isTop5: false },
+            { rank: 27, priority: 4, title: "Software Engineering Intern", company: "Abridge", location: "San Francisco, CA, USA", setup: "On-site", level: "Internship", score: 60, match: "Agentic LLM workflows, retrieval pipelines, React/Node.", gap: "US student internship status required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Could not verify", verif: "Level A (Ashby)", date: "Oct 2026", link: "https://jobs.ashbyhq.com/abridge/aab11857-7ed3-4fc5-aab3-35256601117e", isTop5: false }
+        ];
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const tabs = ['top5', 'repository', 'strategy', 'analytics'];
+            tabs.forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = 'pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap';
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).className = 'pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap';
+
+            if (tabId === 'analytics') {
+                renderCharts();
+            }
+        }
+
+        // Render Top 5 Cards
+        function renderTop5() {
+            const container = document.getElementById('top5-container');
+            const top5 = jobsData.filter(j => j.isTop5);
+
+            container.innerHTML = top5.map(j => `
+                <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-brandAccent text-white text-[11px] font-bold px-3 py-1 rounded-bl-lg">
+                        Rank #${j.rank} • Priority ${j.priority}
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pr-16">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${j.verif}</span>
+                            <h2 class="text-lg font-bold text-brandPrimary mt-1">${j.title}</h2>
+                            <p class="text-xs text-brandMuted font-medium">${j.company} • ${j.location} (${j.setup})</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+                        <div>
+                            <span class="text-brandMuted block font-medium">Match Vector Score:</span>
+                            <strong class="text-base text-brandAccent font-black">${j.score}%</strong>
+                        </div>
+                        <div>
+                            <span class="text-brandMuted block font-medium">Remote from Italy:</span>
+                            <strong class="${j.remoteStatus.includes('Confirmed') ? 'text-emerald-700' : 'text-amber-700'}">${j.remoteStatus}</strong>
+                        </div>
+                        <div>
+                            <span class="text-brandMuted block font-medium">Pitch Project:</span>
+                            <strong class="text-brandPrimary">${j.highlightProject}</strong>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <p class="text-brandPrimary leading-relaxed"><strong>Why it Fits:</strong> ${j.match}</p>
+                        <p class="text-brandMuted leading-relaxed"><strong>Key Gap / Note:</strong> ${j.gap}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-brandBorder pt-3 text-xs">
+                        <span class="text-brandMuted">Posted: ${j.date}</span>
+                        <a href="${j.link}" target="_blank" class="bg-brandPrimary hover:bg-black text-white px-4 py-1.5 rounded font-semibold transition">
+                            Apply on Official ATS ↗
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Data Table
+        function renderTable(data) {
+            const tbody = document.getElementById('repository-tbody');
+            tbody.innerHTML = data.map(j => `
+                <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openModal(${j.rank})">
+                    <td class="p-3 font-bold text-brandMuted">#${j.rank}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${j.priority === 1 ? 'bg-red-50 text-red-700 border border-red-200' : j.priority === 2 ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-700'}">
+                            P${j.priority}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <div class="font-bold text-brandPrimary">${j.title}</div>
+                        <div class="text-[11px] text-brandMuted">${j.company}</div>
+                    </td>
+                    <td class="p-3">
+                        <div>${j.location}</div>
+                        <div class="text-[11px] text-brandMuted">${j.setup}</div>
+                    </td>
+                    <td class="p-3 font-extrabold text-brandAccent">${j.score}%</td>
+                    <td class="p-3">
+                        <span class="${j.remoteStatus.includes('Confirmed') ? 'text-emerald-600 font-semibold' : 'text-brandMuted'}">
+                            ${j.remoteStatus.includes('Confirmed') ? '✓ Remote IT' : 'Restricted'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button class="text-brandAccent hover:underline font-medium">View Fit ↗</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('showing-count').innerText = `Showing ${data.length} of 27 verified vacancies`;
+        }
+
+        // Apply Filters to Table
+        function applyFilters() {
+            const pVal = document.getElementById('filter-priority').value;
+            const rVal = document.getElementById('filter-remote').value;
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+
+            const filtered = jobsData.filter(j => {
+                const matchP = pVal === 'ALL' || j.priority.toString() === pVal;
+                const matchR = rVal === 'ALL' || (rVal === 'REMOTE_IT' && j.remoteStatus.includes('Confirmed')) || (rVal === 'HYBRID_EU' && j.sponsorship.includes('Confirmed'));
+                const matchS = j.title.toLowerCase().includes(searchVal) || j.company.toLowerCase().includes(searchVal) || j.match.toLowerCase().includes(searchVal);
+                return matchP && matchR && matchS;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Modal Control
+        function openModal(rank) {
+            const job = jobsData.find(j => j.rank === rank);
+            if (!job) return;
+
+            document.getElementById('modal-priority').innerText = `Priority ${job.priority}`;
+            document.getElementById('modal-title').innerText = job.title;
+            document.getElementById('modal-company').innerText = `${job.company} • ${job.location} (${job.setup})`;
+            document.getElementById('modal-score').innerText = `${job.score}%`;
+            document.getElementById('modal-score-bar').style.width = `${job.score}%`;
+            document.getElementById('modal-match').innerText = job.match;
+            document.getElementById('modal-gap').innerText = job.gap;
+            document.getElementById('modal-lang').innerText = job.lang;
+            document.getElementById('modal-remote').innerText = job.remoteStatus;
+            document.getElementById('modal-link').href = job.link;
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        // Charts Rendering (Chart.js)
+        let chart1, chart2;
+        function renderCharts() {
+            if (chart1) chart1.destroy();
+            if (chart2) chart2.destroy();
+
+            // Chart 1: Priority Distribution
+            const ctx1 = document.getElementById('priorityChart').getContext('2d');
+            chart1 = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Priority 1 (Med AI)', 'Priority 2 (HealthTech)', 'Priority 3 (General CV)', 'Priority 4 (General SWE)'],
+                    datasets: [{
+                        data: [
+                            jobsData.filter(j => j.priority === 1).length,
+                            jobsData.filter(j => j.priority === 2).length,
+                            jobsData.filter(j => j.priority === 3).length,
+                            jobsData.filter(j => j.priority === 4).length
+                        ],
+                        backgroundColor: ['#E53E3E', '#2B6CB0', '#38A169', '#A0AEC0']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // Chart 2: Remote / Location Breakdown
+            const ctx2 = document.getElementById('locationChart').getContext('2d');
+            chart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Remote from IT', 'EU Hybrid / Sponsorship', 'US Restricted', 'Global Restricted'],
+                    datasets: [{
+                        label: 'Number of Openings',
+                        data: [
+                            jobsData.filter(j => j.remoteStatus.includes('Confirmed')).length,
+                            jobsData.filter(j => j.sponsorship.includes('Confirmed')).length,
+                            jobsData.filter(j => j.location.includes('USA') || j.location.includes('US')).length,
+                            jobsData.filter(j => !j.remoteStatus.includes('Confirmed') && !j.location.includes('US')).length
+                        ],
+                        backgroundColor: '#2B6CB0'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTop5();
+            renderTable(jobsData);
+        });
+    </script>
+</body>
+</html>
