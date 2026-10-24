@@ -88,7 +88,7 @@
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
                 <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Total Audited Roles</div>
-                <div class="text-2xl font-extrabold text-brandPrimary mt-1" id="stat-total">42</div>
+                <div class="text-2xl font-extrabold text-brandPrimary mt-1" id="stat-total">46</div>
                 <div class="text-xs text-emerald-600 font-medium mt-1">100% Level A Verified</div>
             </div>
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
@@ -110,11 +110,14 @@
 
         <!-- Navigation Tabs -->
         <nav class="flex border-b border-brandBorder space-x-6 overflow-x-auto text-sm font-medium">
-            <button onclick="switchTab('top5')" id="tab-top5" class="pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap">
+            <button onclick="switchTab('top-referral')" id="tab-top-referral" class="pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap">
+                Network Referral Opportunities 
+            </button>
+            <button onclick="switchTab('top5')" id="tab-top5" class="pb-3 font-semibold whitespace-nowrap">
                 Top Priority Vacancies
             </button>
             <button onclick="switchTab('repository')" id="tab-repository" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
-                Master Repository (42 Roles)
+                Master Repository (46 Roles)
             </button>
             <button onclick="switchTab('strategy')" id="tab-strategy" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
                 Profile Strategy & Gap Analysis
@@ -124,6 +127,14 @@
             </button>
         </nav>
 
+         <!-- TAB 0: TOP Referral VACANCIES -->
+        <section id="view-top-referral" class="space-y-6">
+             <div class="grid grid-cols-1 gap-6" id="top-referral-container">
+                <!-- Dynamically populated by JS -->
+            </div> 
+        </section>
+
+
         <!-- TAB 1: TOP PRIORITY VACANCIES -->
         <section id="view-top5" class="space-y-6">
             <div class="bg-blue-50/60 border border-blue-200/80 rounded-xl p-4 text-xs text-brandPrimary leading-relaxed flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -132,7 +143,7 @@
                     This tier features top priority vacancies that closely bridge your academic MSc AI computer vision research (PyTorch, U-Net, ResNet, SimCLR) with your 2 years of commercial Python/cloud backend experience.
                 </div>
                 <button onclick="switchTab('repository')" class="bg-brandAccent hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded text-xs transition whitespace-nowrap self-start md:self-auto">
-                    View All 42 Roles →
+                    View All 46 Roles →
                 </button>
             </div>
 
@@ -208,7 +219,7 @@
                 </div>
 
                 <div class="text-xs text-brandMuted flex justify-between items-center pt-2 border-t border-brandBorder">
-                    <span id="showing-count">Showing 42 of 42 verified vacancies</span>
+                    <span id="showing-count">Showing 46 of 46 verified vacancies</span>
                     <span>Click any role row/card for deep match breakdown</span>
                 </div>
             </div>
@@ -219,7 +230,7 @@
             <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-4">
                 <h2 class="text-lg font-bold text-brandPrimary border-b border-brandBorder pb-2">Strategic Applicant Positioning</h2>
                 <p class="text-xs text-brandMuted leading-relaxed">
-                    A key insight across all 42 audited postings is the clear operational distinction between <strong>Clinical Medical Research</strong> (San Raffaele, Humanitas, IIT Genoa) and <strong>Applied HealthTech Software Engineering</strong> (Dexter Health, ImFusion, Fresenius). With 2 years of commercial software experience combined with MSc AI computer vision research, your positioning can target both tracks effectively.
+                    A key insight across all 46 audited postings is the clear operational distinction between <strong>Clinical Medical Research</strong> (San Raffaele, Humanitas, IIT Genoa) and <strong>Applied HealthTech Software Engineering</strong> (Dexter Health, ImFusion, Fresenius). With 2 years of commercial software experience combined with MSc AI computer vision research, your positioning can target both tracks effectively.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -302,7 +313,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Priority Breakdown Chart -->
                 <div class="bg-brandSurface p-5 rounded-xl border border-brandBorder shadow-sm flex flex-col items-center">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Vacancy Count by Priority Tier (42 Roles)</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Vacancy Count by Priority Tier (46 Roles)</h3>
                     <div class="chart-container">
                         <canvas id="priorityChart"></canvas>
                     </div>
@@ -399,13 +410,14 @@
 
     <!-- Application Footer -->
     <footer class="bg-brandSurface border-t border-brandBorder py-4 text-center text-xs text-brandMuted mt-auto">
-        Healthcare AI & Software Engineering Research Portal • Combined Audit October 2026 • 42 Verified Vacancies
+        Healthcare AI & Software Engineering Research Portal • Combined Audit October 2026 • 46 Verified Vacancies
     </footer>
 
     <!-- JavaScript Data & Logic -->
     <script>
-        // Combined Master Dataset (42 Verified Roles from Report 1 & Report 2)
+        // Combined Master Dataset (46 Verified Roles from Report 1 & Report 2)
         const jobsData = [
+            // Top referral roles
             // TOP TIER PRIORITIZED ROLES
             {
                 rank: 1,
@@ -551,14 +563,100 @@
             { rank: 39, priority: 4, title: "Software Engineering Intern", company: "Garner Health", location: "New York, NY, USA", setup: "On-site", level: "Internship", score: 62, match: "Python, React, Node.js, AWS, Docker.", gap: "NYC summer internship; no visa sponsorship.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://job-boards.greenhouse.io/garnerhealth/jobs/6164698004", isTop5: false },
             { rank: 40, priority: 4, title: "Software Engineering Intern", company: "Abridge", location: "San Francisco, CA, USA", setup: "On-site", level: "Internship", score: 60, match: "Agentic LLM workflows, RAG, Node/React.", gap: "US student status required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Unverified", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/abridge/aab11857-7ed3-4fc5-aab3-35256601117e", isTop5: false },
             { rank: 41, priority: 4, title: "Software Engineer (Backend & LLM)", company: "CrowdHealth", location: "Remote - US", setup: "Remote", level: "Mid-Level", score: 72, match: "TypeScript, Python, Node.js, REST APIs, Docker, AWS.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://jobs.lever.co/crowdhealth/04371686-6b4c-4c18-b32c-c2beab2446b5", isTop5: false },
-            { rank: 42, priority: 4, title: "ML Scientist – Clinical Prediction", company: "Iambic Therapeutics", location: "Remote - US", setup: "Remote", level: "Mid-Level", score: 70, match: "Python, PyTorch, Docker, code refactoring.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/iambic-therapeutics/e418c9bf-4fe6-4484-92ad-e9a320557815", isTop5: false }
-        ];
+            { rank: 42, priority: 4, title: "ML Scientist – Clinical Prediction", company: "Iambic Therapeutics", location: "Remote - US", setup: "Remote", level: "Mid-Level", score: 70, match: "Python, PyTorch, Docker, code refactoring.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/iambic-therapeutics/e418c9bf-4fe6-4484-92ad-e9a320557815", isTop5: false },
+        
+        // PRIORITY NETWORK REFERRAL OPPORTUNITIES (PREFERRED TARGET COMPANIES)
+            {
+                rank: 43,
+                priority: 1,
+                title: "Software Developer Digital Health & AI",
+                company: "GVM Care & Research",
+                location: "Bari / Milan, Italy",
+                setup: "Hybrid / On-site",
+                level: "Junior / Mid-Level Software Engineer",
+                score: 88,
+                match: "Direct match for digital health software engineering, backend microservices, and medical AI data processing. Leverages 2+ years of full-stack experience (Node.js, React, REST APIs) alongside M.Tech research in AI and medical imaging pipelines.",
+                gap: "Lacks direct clinical medical imaging experience; requires Italian language working proficiency.",
+                lang: "Italian & English",
+                remoteStatus: "On-site / Hybrid (Italy)",
+                sponsorship: "Local Hire (Italy)",
+                verif: "Level A (Official GVM Portal)",
+                date: "Oct 2026",
+                link: "https://www.gvmnet.it/",
+                highlightProject: "DocXter OCR & Medical Document Analytics",
+                isTop5: false,
+                availableReferral: true
+            },
+            {
+                rank: 44,
+                priority: 3,
+                title: "Software Engineer (Automation, AI, SM.I.LE80)",
+                company: "E80 Group",
+                location: "Viano (Reggio Emilia), Italy",
+                setup: "Hybrid / On-site",
+                level: "Junior / Mid-Level Engineer",
+                score: 85,
+                match: "Strong industrial automation & AI vision fit. Focuses on building scalable software architectures, AGV orchestration, and computer vision systems. Aligns with Python, C++, Docker, and computer vision model deployment (U-Net, OpenCV, PyTorch).",
+                gap: "Industrial automation domain rather than healthcare AI; C++ experience preferred.",
+                lang: "Italian & English",
+                remoteStatus: "On-site / Hybrid (Italy)",
+                sponsorship: "Local Hire (Italy)",
+                verif: "Level A (Official E80 Careers)",
+                date: "Oct 2026",
+                link: "https://www.e80group.com/en/",
+                highlightProject: "Drone Landing Zone Detection (U-Net) & Computer Vision",
+                isTop5: false,
+                availableReferral: true
+            },
+            {
+                rank: 45,
+                priority: 2,
+                title: "Software Engineer / AI Engineer (Graduate Program)",
+                company: "Microsoft",
+                location: "Milan, Italy / Remote",
+                setup: "Hybrid / Remote",
+                level: "University Graduate / Early Career",
+                score: 82,
+                match: "Exceptional match for software engineering rigor, cloud microservices (AWS/Azure), Python/Node.js backend development, and applied AI systems. Open to international students and EU graduates.",
+                gap: "High candidate competition volume; requires navigating multi-stage technical coding interviews.",
+                lang: "English (Full Professional)",
+                remoteStatus: "Confirmed (Remote / Hybrid Italy)",
+                sponsorship: "Confirmed / Local Hire (Italy)",
+                verif: "Level A (Official Microsoft Careers)",
+                date: "Oct 2026",
+                link: "https://www.microsoft.com/",
+                highlightProject: "Next Smart Move Refactoring & Cloud APIs",
+                isTop5: false,
+                availableReferral: true
+            },
+            {
+                rank: 46,
+                priority: 4,
+                title: "IT & Software Systems Engineer",
+                company: "Sanlorenzo Yacht",
+                location: "La Spezia / Ameglia, Italy",
+                setup: "Hybrid / On-site",
+                level: "Junior / Early-Career Engineer",
+                score: 73,
+                match: "Corporate IT & software infrastructure track. Aligns with enterprise full-stack development, database architecture, network systems, and software refactoring experience.",
+                gap: "Non-AI domain; focused primarily on enterprise software and IT systems infrastructure.",
+                lang: "Italian & English",
+                remoteStatus: "On-site / Hybrid (Italy)",
+                sponsorship: "Local Hire (Italy)",
+                verif: "Level A (Official Sanlorenzo Careers)",
+                date: "Oct 2026",
+                link: "https://www.sanlorenzoyacht.com/",
+                highlightProject: "Next Smart Move (Refactoring & Enterprise Software)",
+                isTop5: false,
+                availableReferral: true
+            },
+            ];
 
         let currentViewMode = 'table'; // 'table' or 'grouped'
 
         // Tab Switcher
         function switchTab(tabId) {
-            const tabs = ['top5', 'repository', 'strategy', 'analytics'];
+            const tabs = ['top-referral', 'top5', 'repository', 'strategy', 'analytics'];
             tabs.forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
                 document.getElementById(`tab-${t}`).className = 'pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap';
@@ -593,6 +691,61 @@
             }
             applyFilters();
         }
+
+        // Render Top referral jobs and priority cards
+         function renderReferralJobs() {
+            const container = document.getElementById('top-referral-container');
+            const topReferralJobs = jobsData.filter(j => j.availableReferral);
+
+            container.innerHTML = topReferralJobs.map(j => `
+                <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-brandAccent text-white text-[11px] font-bold px-3 py-1 rounded-bl-lg">
+                        Rank #${j.rank} • Priority ${j.priority}
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pr-16">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${j.verif}</span>
+                            <h2 class="text-lg font-bold text-brandPrimary mt-1">${j.title}</h2>
+                            <p class="text-xs text-brandMuted font-medium">${j.company} • ${j.location} (${j.setup})</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+                        <div>
+                            <span class="text-brandMuted block font-medium">Fit Match Score:</span>
+                            <strong class="text-base text-brandAccent font-black">${j.score}%</strong>
+                        </div>
+                        <div>
+                            <span class="text-brandMuted block font-medium">Italy Eligibility:</span>
+                            <strong class="${j.remoteStatus.includes('On-site Milan') || j.remoteStatus.includes('Confirmed') || j.remoteStatus.includes('Commutable') ? 'text-emerald-700' : 'text-amber-700'}">${j.remoteStatus}</strong>
+                        </div>
+                        <div>
+                            <span class="text-brandMuted block font-medium">Recommended Pitch Project:</span>
+                            <strong class="text-brandPrimary">${j.highlightProject}</strong>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <p class="text-brandPrimary leading-relaxed"><strong>Why it Fits:</strong> ${j.match}</p>
+                        <p class="text-brandMuted leading-relaxed"><strong>Key Gap / Note:</strong> ${j.gap}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-brandBorder pt-3 text-xs">
+                        <span class="text-brandMuted">Posted: ${j.date}</span>
+                        <div class="flex gap-2">
+                            <button onclick="openModal(${j.rank})" class="bg-slate-100 hover:bg-slate-200 text-brandPrimary px-3 py-1.5 rounded font-semibold transition">
+                                Detailed Fit Rationale
+                            </button>
+                            <a href="${j.link}" target="_blank" class="bg-brandPrimary hover:bg-black text-white px-4 py-1.5 rounded font-semibold transition">
+                                Apply on Official Portal ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
 
         // Render Top Priority Cards
         function renderTop5() {
@@ -853,6 +1006,7 @@
         // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             updateStats();
+            renderReferralJobs();
             renderTop5();
             renderTable(jobsData);
             renderGrouped(jobsData);
