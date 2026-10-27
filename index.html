@@ -7,21 +7,16 @@
     <!-- Chosen Palette: Warm Neutrals & Sage Harmony (Slate, Emerald/Sage accent, Warm Amber, Soft Sand background) -->
     <!-- Application Structure Plan:
          This interactive SPA translates two distinct audit reports into a single strategic career execution portal for an MSc AI student in Italy.
-         1. Metrics Header: Live aggregated metrics reflecting all 42 audited vacancies, remote accessibility, and top match vectors.
+         1. Metrics Header: Live aggregated metrics reflecting all 66 audited vacancies, remote accessibility, and top match vectors.
          2. Tab Navigation:
-            - Top Priority Roles: Spotlight cards for the top ranked roles (IRCCS San Raffaele, ImFusion, Humanitas, Dexter Health, Fresenius).
-            - Master Job Repository (42 Vacancies): Interactive table with search, priority filtering, arrangement filtering, and an instant "Group by Priority Tier" view toggle.
-            - Strategic Positioning & Gap Analysis: Insights on Clinical AI Research vs. Production HealthTech, bridging academic projects (U-Net, DocXter, SimCLR) to production needs.
-            - Market Analytics & Visualizations: Dynamic Chart.js visualizations breaking down vacancy volume across Priority Tiers, geographic accessibility (Milan/Italy/EU/Global), and skill gap frequency.
+            - Network Referral Opportunities: Spotlight cards for key referral targets.
+            - Top Priority Vacancies: Spotlight cards for the top ranked roles.
+            - Internships: Filtered table & details view dedicated strictly to internships.
+            - Master Job Repository: Interactive table with search, priority filtering, arrangement filtering, and an instant "Group by Priority Tier" view toggle.
+            - Strategic Positioning & Gap Analysis: Insights on Clinical AI Research vs. Production HealthTech.
+            - Market Analytics & Visualizations: Dynamic Chart.js visualizations breaking down vacancy volume across Priority Tiers, geographic accessibility, and skill gap frequency.
          3. Dynamic Slide-Over Detail Drawer: Clickable table rows and cards trigger candidate fit breakdowns, pitch project alignments, and direct official ATS links.
     -->
-    <!-- Visualization & Content Choices:
-         - Metrics Widgets: Real-time calculation of key career metrics (42 total roles, remote count, top match percentage).
-         - Priority Tier Grouping: Interactive visual cards and collapsible/grouped table views for Priority 1 through Priority 4.
-         - Interactive Table & Filters: Multi-criteria JS filtering (Priority, Location/Remote, Text Search).
-         - Chart.js Canvas Visualizations: Priority Tier Donut Chart and Location/Remote Accessibility Bar Chart. Strictly Canvas-based, responsive wrapper, no SVG/Mermaid.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -88,23 +83,23 @@
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
                 <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Total Audited Roles</div>
-                <div class="text-2xl font-extrabold text-brandPrimary mt-1" id="stat-total">46</div>
+                <div class="text-2xl font-extrabold text-brandPrimary mt-1" id="stat-total">61</div>
                 <div class="text-xs text-emerald-600 font-medium mt-1">100% Level A Verified</div>
             </div>
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
                 <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Priority 1 (Med AI/CV)</div>
-                <div class="text-2xl font-extrabold text-red-600 mt-1" id="stat-p1">15</div>
+                <div class="text-2xl font-extrabold text-red-600 mt-1" id="stat-p1">18</div>
                 <div class="text-xs text-brandMuted mt-1">Medical Image & Research</div>
             </div>
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
                 <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Milan & Italy Remote</div>
-                <div class="text-2xl font-extrabold text-emerald-600 mt-1" id="stat-italy">12</div>
+                <div class="text-2xl font-extrabold text-emerald-600 mt-1" id="stat-italy">17</div>
                 <div class="text-xs text-emerald-600 font-medium mt-1">No Visa / Relocation Needed</div>
             </div>
             <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm">
                 <div class="text-xs font-semibold text-brandMuted uppercase tracking-wider">Highest Fit Score</div>
-                <div class="text-2xl font-extrabold text-brandHighlight mt-1">91%</div>
-                <div class="text-xs text-brandMuted mt-1">Dexter Health / San Raffaele (80%)</div>
+                <div class="text-2xl font-extrabold text-brandHighlight mt-1">92%</div>
+                <div class="text-xs text-brandMuted mt-1">Roche pRED (ML Internship)</div>
             </div>
         </section>
 
@@ -113,11 +108,14 @@
             <button onclick="switchTab('top-referral')" id="tab-top-referral" class="pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap">
                 Network Referral Opportunities 
             </button>
-            <button onclick="switchTab('top5')" id="tab-top5" class="pb-3 font-semibold whitespace-nowrap">
+            <button onclick="switchTab('top5')" id="tab-top5" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap font-semibold">
                 Top Priority Vacancies
             </button>
+            <button onclick="switchTab('internships')" id="tab-internships" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap font-semibold">
+                Internships
+            </button>
             <button onclick="switchTab('repository')" id="tab-repository" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
-                Master Repository (46 Roles)
+                Master Repository (<span class="stat-total-inline">61</span> Roles)
             </button>
             <button onclick="switchTab('strategy')" id="tab-strategy" class="pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap">
                 Profile Strategy & Gap Analysis
@@ -134,21 +132,73 @@
             </div> 
         </section>
 
-
         <!-- TAB 1: TOP PRIORITY VACANCIES -->
-        <section id="view-top5" class="space-y-6">
+        <section id="view-top5" class="hidden space-y-6">
             <div class="bg-blue-50/60 border border-blue-200/80 rounded-xl p-4 text-xs text-brandPrimary leading-relaxed flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                     <strong class="font-semibold text-brandAccent">Top Recommended Actions (October 2026):</strong>
                     This tier features top priority vacancies that closely bridge your academic MSc AI computer vision research (PyTorch, U-Net, ResNet, SimCLR) with your 2 years of commercial Python/cloud backend experience.
                 </div>
-                <button onclick="switchTab('repository')" class="bg-brandAccent hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded text-xs transition whitespace-nowrap self-start md:self-auto">
-                    View All 46 Roles →
+                <button onclick="switchTab('repository')" class="bg-brandAccent hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded text-xs transition whitespace-nowrap self-start md:self-auto view-all-btn">
+                    View All Opportunities →
                 </button>
             </div>
 
             <div class="grid grid-cols-1 gap-6" id="top5-container">
                 <!-- Dynamically populated by JS -->
+            </div>
+        </section>
+
+        <!-- TAB INTERNSHIPS -->
+        <section id="view-internships" class="hidden space-y-4">
+            <div class="bg-brandSurface p-4 rounded-xl border border-brandBorder shadow-sm space-y-4">
+                <div class="flex flex-col lg:flex-row gap-3 justify-between items-start lg:items-center">
+                    <div class="flex flex-wrap gap-2 items-center text-xs">
+                        <span class="font-semibold text-brandMuted">Internship Filters:</span>
+                        <select id="filter-internship-priority" onchange="applyInternshipFilters()" class="border border-brandBorder rounded px-2.5 py-1.5 bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                            <option value="ALL">All Priorities (1-4)</option>
+                            <option value="1">Priority 1: Healthcare AI & Med Imaging</option>
+                            <option value="2">Priority 2: Healthcare SW & HealthTech</option>
+                            <option value="3">Priority 3: General CV & ML</option>
+                            <option value="4">Priority 4: General SW & EdTech</option>
+                        </select>
+
+                        <select id="filter-internship-remote" onchange="applyInternshipFilters()" class="border border-brandBorder rounded px-2.5 py-1.5 bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                            <option value="ALL">All Locations & Setup</option>
+                            <option value="MILAN">Milan Region (On-site / Hybrid)</option>
+                            <option value="REMOTE_IT">Remote Accessible from Italy</option>
+                            <option value="EU_HYBRID">EU Hybrid / Relocation</option>
+                        </select>
+                    </div>
+
+                    <div class="w-48 md:w-56">
+                        <input type="text" id="search-internship-input" onkeyup="applyInternshipFilters()" placeholder="Search internship title, company..." class="w-full border border-brandBorder rounded px-3 py-1.5 text-xs bg-brandSurface text-brandPrimary focus:outline-none focus:ring-1 focus:ring-brandAccent">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-brandBorder">
+                    <table class="w-full text-left text-xs text-brandPrimary">
+                        <thead class="bg-slate-50 text-brandMuted font-semibold uppercase tracking-wider border-b border-brandBorder">
+                            <tr>
+                                <th class="p-3">Rank</th>
+                                <th class="p-3">Tier</th>
+                                <th class="p-3">Job Title & Institution</th>
+                                <th class="p-3">Location & Arrangement</th>
+                                <th class="p-3">Fit Score</th>
+                                <th class="p-3">Italy Eligibility</th>
+                                <th class="p-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="internships-tbody" class="divide-y divide-brandBorder bg-white">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-xs text-brandMuted flex justify-between items-center pt-2 border-t border-brandBorder">
+                    <span id="showing-internships-count">Showing 15 internships</span>
+                    <span>Click any row for deep match breakdown</span>
+                </div>
             </div>
         </section>
 
@@ -219,7 +269,7 @@
                 </div>
 
                 <div class="text-xs text-brandMuted flex justify-between items-center pt-2 border-t border-brandBorder">
-                    <span id="showing-count">Showing 46 of 46 verified vacancies</span>
+                    <span id="showing-count">Showing 61 verified vacancies</span>
                     <span>Click any role row/card for deep match breakdown</span>
                 </div>
             </div>
@@ -230,7 +280,7 @@
             <div class="bg-brandSurface p-6 rounded-xl border border-brandBorder shadow-sm space-y-4">
                 <h2 class="text-lg font-bold text-brandPrimary border-b border-brandBorder pb-2">Strategic Applicant Positioning</h2>
                 <p class="text-xs text-brandMuted leading-relaxed">
-                    A key insight across all 46 audited postings is the clear operational distinction between <strong>Clinical Medical Research</strong> (San Raffaele, Humanitas, IIT Genoa) and <strong>Applied HealthTech Software Engineering</strong> (Dexter Health, ImFusion, Fresenius). With 2 years of commercial software experience combined with MSc AI computer vision research, your positioning can target both tracks effectively.
+                    A key insight across all audited postings is the clear operational distinction between <strong>Clinical Medical Research</strong> (San Raffaele, Humanitas, IIT Genoa) and <strong>Applied HealthTech Software Engineering</strong> (Dexter Health, ImFusion, Fresenius). With 2 years of commercial software experience combined with MSc AI computer vision research, your positioning can target both tracks effectively.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -239,7 +289,7 @@
                         <ul class="text-xs space-y-2 text-brandPrimary">
                             <li class="flex items-start gap-1.5">
                                 <span class="text-emerald-600 font-bold">✓</span>
-                                <span><strong>Target Roles:</strong> IRCCS San Raffaele, ImFusion, Humanitas AI Center.</span>
+                                <span><strong>Target Roles:</strong> IRCCS San Raffaele, ImFusion, Humanitas AI Center, Roche pRED.</span>
                             </li>
                             <li class="flex items-start gap-1.5">
                                 <span class="text-emerald-600 font-bold">✓</span>
@@ -257,7 +307,7 @@
                         <ul class="text-xs space-y-2 text-brandPrimary">
                             <li class="flex items-start gap-1.5">
                                 <span class="text-emerald-600 font-bold">✓</span>
-                                <span><strong>Target Roles:</strong> Dexter Health, Fresenius, Breathment, Orion Health.</span>
+                                <span><strong>Target Roles:</strong> Dexter Health, Fresenius, Breathment, Roche Diagnostics, Orion Health.</span>
                             </li>
                             <li class="flex items-start gap-1.5">
                                 <span class="text-emerald-600 font-bold">✓</span>
@@ -313,7 +363,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Priority Breakdown Chart -->
                 <div class="bg-brandSurface p-5 rounded-xl border border-brandBorder shadow-sm flex flex-col items-center">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Vacancy Count by Priority Tier (46 Roles)</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-brandMuted mb-4 w-full text-left">Vacancy Count by Priority Tier (<span class="stat-total-inline">61</span> Roles)</h3>
                     <div class="chart-container">
                         <canvas id="priorityChart"></canvas>
                     </div>
@@ -356,7 +406,10 @@
             <div>
                 <div class="flex justify-between items-start border-b border-brandBorder pb-4">
                     <div>
-                        <span id="modal-priority" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-brandAccent">Priority 1</span>
+                        <div class="flex items-center gap-2">
+                            <span id="modal-priority" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-brandAccent">Priority 1</span>
+                            <span id="modal-badge-internship" class="hidden text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-700">Internship</span>
+                        </div>
                         <h2 id="modal-title" class="text-lg font-bold text-brandPrimary mt-1">Job Title</h2>
                         <p id="modal-company" class="text-xs text-brandMuted font-medium">Company Name • Location</p>
                     </div>
@@ -410,12 +463,12 @@
 
     <!-- Application Footer -->
     <footer class="bg-brandSurface border-t border-brandBorder py-4 text-center text-xs text-brandMuted mt-auto">
-        Healthcare AI & Software Engineering Research Portal • Combined Audit October 2026 • 46 Verified Vacancies
+        Healthcare AI & Software Engineering Research Portal • Combined Audit October 2026 • <span class="stat-total-inline">61</span> Verified Vacancies
     </footer>
 
     <!-- JavaScript Data & Logic -->
     <script>
-        // Combined Master Dataset (46 Verified Roles from Report 1 & Report 2)
+        // Combined Master Dataset
         const jobsData = [
             // Top referral roles
             // TOP TIER PRIORITIZED ROLES
@@ -559,13 +612,13 @@
             { rank: 35, priority: 4, title: "Junior Full-Stack Developer - EdTech", company: "Intopia / Education Startup", location: "Remote (EU)", setup: "Remote", level: "Junior", score: 40, match: "React/Node.js experience, AWS, Python.", gap: "Non-healthcare domain.", lang: "English", remoteStatus: "Confirmed (Remote EU)", sponsorship: "Not needed", verif: "Level A", date: "Oct 2026", link: "https://workable.com", isTop5: false },
             { rank: 36, priority: 4, title: "Graduate Software Engineer (Internship)", company: "Philips (Digital Health)", location: "Italy / Germany", setup: "On-site", level: "Graduate", score: 50, match: "Software dev, cloud, containers.", gap: "Requires clinical integration interest.", lang: "English", remoteStatus: "On-site/Hybrid", sponsorship: "Confirmed", verif: "Level A", date: "Oct 2026", link: "https://www.careers.philips.com", isTop5: false },
             { rank: 37, priority: 4, title: "React/Node.js Developer", company: "Babylab / Health Tech Incubator", location: "Milan, Italy", setup: "Remote IT", level: "Junior", score: 55, match: "Frontend JS skills, AWS Lambda.", gap: "Not AI-focused; pure full-stack.", lang: "Italian & English", remoteStatus: "Confirmed (Remote IT)", sponsorship: "Local Hire", verif: "Level A", date: "Oct 2026", link: "https://babylab.it", isTop5: false },
-            { rank: 38, priority: 4, title: "Full Stack Associate Software Engineer", company: "One Imaging", location: "Miami, FL, USA", setup: "On-site", level: "Associate", score: 64, match: "React, Node.js, TypeScript, SQL, REST APIs.", gap: "University of Florida grads restricted.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://job-boards.greenhouse.io/oneimaging/jobs/4403125009", isTop5: false },
-            { rank: 39, priority: 4, title: "Software Engineering Intern", company: "Garner Health", location: "New York, NY, USA", setup: "On-site", level: "Internship", score: 62, match: "Python, React, Node.js, AWS, Docker.", gap: "NYC summer internship; no visa sponsorship.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://job-boards.greenhouse.io/garnerhealth/jobs/6164698004", isTop5: false },
-            { rank: 40, priority: 4, title: "Software Engineering Intern", company: "Abridge", location: "San Francisco, CA, USA", setup: "On-site", level: "Internship", score: 60, match: "Agentic LLM workflows, RAG, Node/React.", gap: "US student status required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Unverified", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/abridge/aab11857-7ed3-4fc5-aab3-35256601117e", isTop5: false },
+            { rank: 38, priority: 4, title: "Full Stack Associate Software Engineer", company: "One Imaging", location: "Miami, FL, USA", setup: "On-site", level: "Associate", score: 64, match: "Radiology software platform, React, TypeScript, Node.js, SQL, REST APIs.", gap: "Restricted to University of Florida graduates based in Miami.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://job-boards.greenhouse.io/oneimaging/jobs/4403125009", isTop5: false },
+            { rank: 39, priority: 4, title: "Software Engineering Intern", company: "Garner Health", location: "New York, NY, USA", setup: "On-site", level: "Internship", score: 68, match: "Full stack, Python, Node.js, React, AWS, Docker, AI coding tools.", gap: "Strictly no US visa sponsorship; requires US work authorization.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted (No visa sponsorship)", verif: "Level A", date: "Oct 2026", link: "https://job-boards.greenhouse.io/garnerhealth/jobs/6164698004", isTop5: false },
+            { rank: 40, priority: 4, title: "Software Engineering Intern", company: "Abridge", location: "San Francisco, CA, USA", setup: "On-site", level: "Internship", score: 66, match: "Agentic LLM workflows, retrieval pipelines, React, Node.js.", gap: "US location; work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Unverified", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/abridge/aab11857-7ed3-4fc5-aab3-35256601117e", isTop5: false },
             { rank: 41, priority: 4, title: "Software Engineer (Backend & LLM)", company: "CrowdHealth", location: "Remote - US", setup: "Remote", level: "Mid-Level", score: 72, match: "TypeScript, Python, Node.js, REST APIs, Docker, AWS.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://jobs.lever.co/crowdhealth/04371686-6b4c-4c18-b32c-c2beab2446b5", isTop5: false },
             { rank: 42, priority: 4, title: "ML Scientist – Clinical Prediction", company: "Iambic Therapeutics", location: "Remote - US", setup: "Remote", level: "Mid-Level", score: 70, match: "Python, PyTorch, Docker, code refactoring.", gap: "US work authorization required.", lang: "English", remoteStatus: "Restricted", sponsorship: "Restricted", verif: "Level A", date: "Oct 2026", link: "https://jobs.ashbyhq.com/iambic-therapeutics/e418c9bf-4fe6-4484-92ad-e9a320557815", isTop5: false },
         
-        // PRIORITY NETWORK REFERRAL OPPORTUNITIES (PREFERRED TARGET COMPANIES)
+            // PRIORITY NETWORK REFERRAL OPPORTUNITIES (PREFERRED TARGET COMPANIES)
             {
                 rank: 43,
                 priority: 1,
@@ -650,20 +703,311 @@
                 isTop5: false,
                 availableReferral: true
             },
-            ];
+
+            // NEW INTERNSHIP ENTRIES
+            {
+                rank: 47,
+                priority: 1,
+                title: "Internship in Machine Learning for Analytical Signal Data",
+                company: "Roche",
+                location: "Penzberg, Bavaria, Germany",
+                setup: "On-site / Hybrid",
+                level: "Internship",
+                score: 92,
+                match: "Direct match for an enrolled Master's student. Aligns with your PyTorch, deep learning, Python scientific data processing (Pandas, NumPy, scikit-learn), Git workflow, and Linux development skills. Fits your academic PyTorch self-supervised classification and model evaluation projects.",
+                gap: "Physical presence in Penzberg is required. German is a plus but not required (English is the primary working language).",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Accessible to EU students or non-EU students studying in the EU with university confirmation.",
+                verif: "Level A (Job ID: ROCHGLOBAL202610126742EXTERNALENGLOBAL)",
+                date: "October 2026",
+                link: "https://careers.roche.com/global/en/job/ROCHGLOBAL202610126742EXTERNALENGLOBAL/Internship-Data-and-Digital-Enablement-PRLABD",
+                isInternship: true
+            },
+            {
+                rank: 48,
+                priority: 2,
+                title: "Internship - Software and Data Engineer",
+                company: "Roche Diagnostics",
+                location: "Rotkreuz, Zug, Switzerland",
+                setup: "Hybrid",
+                level: "Internship",
+                score: 89,
+                match: "Exceptional overlap with your dual background. Combines Python, REST APIs (FastAPI), React.js, Git, CI/CD, data engineering pipelines, and AI agent workflows. Fits your 2+ years of commercial software development and your DocXter platform architecture.",
+                gap: "Important restriction: Roche notes this specific Swiss internship cannot be combined with writing a university thesis. Must be completed purely as a curricular credit placement.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Roche provides Swiss short-term work permit (L-Permit) authorization support for mandatory university internships.",
+                verif: "Level A (Job ID: 202610-127501)",
+                date: "October 2026",
+                link: "https://careers.roche.com/global/en/job/202610-127501/Internship-Software-and-Data-Engineer-for-12-months-in-Rotkreuz",
+                isInternship: true
+            },
+            {
+                rank: 49,
+                priority: 3,
+                title: "AI & Data Science Intern",
+                company: "Philip Morris International",
+                location: "Lausanne, Switzerland",
+                setup: "On-site / Hybrid",
+                level: "Internship",
+                score: 87,
+                match: "Matches your Python, PyTorch, Generative AI (AWS Bedrock), LLMs, REST APIs, and data pipeline skills. Directly leverages your DocXter project (AWS Lambda, Flask, RAG) and software engineering experience.",
+                gap: "Requires relocation to Lausanne for 6 months. Non-EU applicants require cantonal L-permit processing.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "PMI registers the internship contract with Swiss cantonal authorities to issue a short-term L-permit.",
+                verif: "Level A (Job ID: 34171)",
+                date: "October 2026",
+                link: "https://join.pmicareers.com/gb/en/job/34171/AI-Data-Science-Intern",
+                isInternship: true
+            },
+            {
+                rank: 50,
+                priority: 3,
+                title: "New Graduate - Physical AI Internship",
+                company: "NTT Ltd.",
+                location: "Milano (20143), Lombardia, Italy",
+                setup: "On-site / Hybrid",
+                level: "Internship",
+                score: 84,
+                match: "Direct match for your computer vision and PyTorch background. Focuses on multimodal perception, Computer Vision, Vision-Language Models (VLM), Spatial Intelligence, and Scene Understanding. Aligns with your drone landing zone U-Net segmentation and ResNet/SimCLR projects.",
+                gap: "Focuses on physical AI/robotics perception rather than medical diagnostics.",
+                lang: "Italian and English",
+                remoteStatus: "Confirmed",
+                sponsorship: "Local hire via Italian student permit framework.",
+                verif: "Level A/B",
+                date: "October 2026",
+                link: "https://it.indeed.com/q-stage-intelligenza-artificiale-l-milano,-lombardia-offerte-lavoro.html",
+                isInternship: true
+            },
+            {
+                rank: 51,
+                priority: 2,
+                title: "IT Healthcare Junior Specialist - Stage",
+                company: "Instrumentation Laboratory spa (Werfen Group)",
+                location: "Milano, Lombardia, Italy",
+                setup: "On-site / Hybrid",
+                level: "Internship",
+                score: 81,
+                match: "Aligns with your 2+ years of full-stack software development experience. Focuses on healthcare IT systems, diagnostic software troubleshooting, application maintenance, and database query optimization.",
+                gap: "Focuses more on healthcare IT system integration and software maintenance than deep learning research.",
+                lang: "Italian & English",
+                remoteStatus: "Confirmed",
+                sponsorship: "Local hire via Italian student permit.",
+                verif: "Level A/B",
+                date: "October 2026",
+                link: "https://it.indeed.com/q-stage-sviluppo-software-l-milano,-lombardia-offerte-lavoro.html",
+                isInternship: true
+            },
+            {
+                rank: 52,
+                priority: 1,
+                title: "Clinical Data Analyst Intern",
+                company: "Sonio",
+                location: "Paris, France",
+                setup: "Hybrid",
+                level: "Internship",
+                score: 78,
+                match: "Python, SQL, data processing, statistical ultrasound analysis.",
+                gap: "Fluent French & English mandatory",
+                lang: "French & English",
+                remoteStatus: "Restricted",
+                sponsorship: "EU student agreement (Convention de stage)",
+                verif: "Level A (Ashby)",
+                date: "Oct 2026",
+                link: "https://jobs.ashbyhq.com/Sonio/c2a4c162-9e39-4fc7-9de9-49e03536a121",
+                isInternship: true
+            },
+            {
+                rank: 53,
+                priority: 1,
+                title: "Curricular Internship / Fellow in Biomedical AI",
+                company: "Istituto Italiano di Tecnologia (IIT)",
+                location: "Milano / Genova, Italy",
+                setup: "On-site",
+                level: "Internship",
+                score: 76,
+                match: "PyTorch, computer vision, neuroimaging, medical AI.",
+                gap: "Research/academic focus rather than corporate product development.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Local Italian student agreement",
+                verif: "Level A (Official IIT Portal)",
+                date: "Oct 2026",
+                link: "https://www.iit.it/work-at-iit/professionals-and-students/students",
+                isInternship: true
+            },
+            {
+                rank: 54,
+                priority: 2,
+                title: "Software Developer Digital Health & AI",
+                company: "GVM Care & Research",
+                location: "Bari / Milan, Italy",
+                setup: "Hybrid",
+                level: "Internship",
+                score: 75,
+                match: "Full-stack SWE (React, Node, Python), REST APIs, medical IT.",
+                gap: "Italian working proficiency required.",
+                lang: "Italian & English",
+                remoteStatus: "Restricted",
+                sponsorship: "Local hire (Italy)",
+                verif: "Level A (Official GVM Portal)",
+                date: "Oct 2026",
+                link: "https://www.gvmnet.it/",
+                isInternship: true
+            },
+            {
+                rank: 55,
+                priority: 2,
+                title: "Intern DDIT APD D&A Agentic Orchestration Integration Engineering",
+                company: "Novartis",
+                location: "Hyderabad, India",
+                setup: "Office",
+                level: "Internship",
+                score: 74,
+                match: "Python, REST APIs, Agentic AI, multi-agent frameworks, cloud.",
+                gap: "Located in India (requires relocation/work rights in India).",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Not mentioned",
+                verif: "Level A (Novartis Careers, REQ-10090206)",
+                date: "Oct 18, 2026",
+                link: "https://www.novartis.com/careers/career-search/job/details/req-10090206-intern-ddit-apd-da-agentic-orchestration-integration-engineering",
+                isInternship: true
+            },
+            {
+                rank: 56,
+                priority: 2,
+                title: "Finance & Administration Intern (HealthTech)",
+                company: "Elty di DaVinci Salute (Unipol Group)",
+                location: "Milano, Italy",
+                setup: "Hybrid",
+                level: "Internship",
+                score: 71,
+                match: "Digital health operations, data reconciliation, process optimization.",
+                gap: "Operations/admin focus rather than direct software development.",
+                lang: "Italian & English",
+                remoteStatus: "Hybrid Milan",
+                sponsorship: "Local hire",
+                verif: "Level A (Lever)",
+                date: "Oct 2026",
+                link: "https://jobs.lever.co/elty/fab6bf8d-0cdb-48c5-ab3f-9c972fa44f4b",
+                isInternship: true
+            },
+            {
+                rank: 57,
+                priority: 3,
+                title: "Applied AI Developer",
+                company: "Dexter Health",
+                location: "Remote Worldwide (Italy accessible)",
+                setup: "Remote",
+                level: "Internship",
+                score: 85,
+                match: "Python backend, LLM workflows, Flask, AWS, DocXter platform match.",
+                gap: "Permanent role rather than formal student internship contract.",
+                lang: "English (German bonus)",
+                remoteStatus: "Confirmed 100% Remote from IT",
+                sponsorship: "Not applicable",
+                verif: "Level A (Join.com)",
+                date: "Oct 2026",
+                link: "https://join.com/companies/dexter-health/16838170-applied-ai-developer-remote",
+                isInternship: true
+            },
+            {
+                rank: 58,
+                priority: 3,
+                title: "Junior AI Engineer – Computer Vision",
+                company: "InnovationTeam",
+                location: "Global Remote (Italy accessible)",
+                setup: "Remote",
+                level: "Internship",
+                score: 83,
+                match: "PyTorch, OpenCV, CNNs, U-Net segmentation, Docker, Python.",
+                gap: "Full-time junior position rather than traditional student stage.",
+                lang: "English",
+                remoteStatus: "Confirmed 100% Remote from IT",
+                sponsorship: "Not needed for remote",
+                verif: "Level A (Workable)",
+                date: "Oct 2026",
+                link: "https://apply.workable.com/innovationteam/j/CE4356E68F",
+                isInternship: true
+            },
+            {
+                rank: 59,
+                priority: 3,
+                title: "Software Engineering Intern",
+                company: "Garner Health",
+                location: "New York, NY, USA",
+                setup: "On-site",
+                level: "Internship",
+                score: 68,
+                match: "Full stack, Python, Node.js, React, AWS, Docker, AI coding tools.",
+                gap: "Strictly no US visa sponsorship; requires US work authorization.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Restricted (No visa sponsorship)",
+                verif: "Level A (Greenhouse)",
+                date: "Oct 2026",
+                link: "https://job-boards.greenhouse.io/garnerhealth/jobs/6164698004",
+                isInternship: true
+            },
+            {
+                rank: 60,
+                priority: 3,
+                title: "Software Engineering Intern",
+                company: "Abridge",
+                location: "San Francisco, CA, USA",
+                setup: "On-site",
+                level: "Internship",
+                score: 66,
+                match: "Agentic LLM workflows, retrieval pipelines, React, Node.js.",
+                gap: "US location; work authorization required.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Unverified",
+                verif: "Level A (Ashby)",
+                date: "Oct 2026",
+                link: "https://jobs.ashbyhq.com/abridge/aab11857-7ed3-4fc5-aab3-35256601117e",
+                isInternship: true
+            },
+            {
+                rank: 61,
+                priority: 3,
+                title: "Full Stack Associate Software Engineer",
+                company: "One Imaging",
+                location: "Miami, FL, USA",
+                setup: "On-site",
+                level: "Internship",
+                score: 64,
+                match: "Radiology software platform, React, TypeScript, Node.js, SQL, REST APIs.",
+                gap: "Restricted to University of Florida graduates based in Miami.",
+                lang: "English",
+                remoteStatus: "Restricted",
+                sponsorship: "Restricted",
+                verif: "Level A (Greenhouse)",
+                date: "Oct 2026",
+                link: "https://job-boards.greenhouse.io/oneimaging/jobs/4403125009",
+                isInternship: true
+            }
+        ];
 
         let currentViewMode = 'table'; // 'table' or 'grouped'
 
         // Tab Switcher
         function switchTab(tabId) {
-            const tabs = ['top-referral', 'top5', 'repository', 'strategy', 'analytics'];
+            const tabs = ['top-referral', 'top5', 'internships', 'repository', 'strategy', 'analytics'];
             tabs.forEach(t => {
-                document.getElementById(`view-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = 'pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap';
+                const viewEl = document.getElementById(`view-${t}`);
+                const tabEl = document.getElementById(`tab-${t}`);
+                if (viewEl) viewEl.classList.add('hidden');
+                if (tabEl) tabEl.className = 'pb-3 border-b-2 border-transparent text-brandMuted hover:text-brandPrimary hover:border-brandMuted whitespace-nowrap font-semibold';
             });
 
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).className = 'pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap';
+            const activeView = document.getElementById(`view-${tabId}`);
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeView) activeView.classList.remove('hidden');
+            if (activeTab) activeTab.className = 'pb-3 border-b-2 border-brandAccent text-brandAccent font-semibold whitespace-nowrap';
 
             if (tabId === 'analytics') {
                 renderCharts();
@@ -692,8 +1036,8 @@
             applyFilters();
         }
 
-        // Render Top referral jobs and priority cards
-         function renderReferralJobs() {
+        // Render Top referral jobs
+        function renderReferralJobs() {
             const container = document.getElementById('top-referral-container');
             const topReferralJobs = jobsData.filter(j => j.availableReferral);
 
@@ -706,6 +1050,7 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pr-16">
                         <div>
                             <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${j.verif}</span>
+                            ${j.isInternship ? '<span class="ml-1 text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">Internship</span>' : ''}
                             <h2 class="text-lg font-bold text-brandPrimary mt-1">${j.title}</h2>
                             <p class="text-xs text-brandMuted font-medium">${j.company} • ${j.location} (${j.setup})</p>
                         </div>
@@ -722,7 +1067,7 @@
                         </div>
                         <div>
                             <span class="text-brandMuted block font-medium">Recommended Pitch Project:</span>
-                            <strong class="text-brandPrimary">${j.highlightProject}</strong>
+                            <strong class="text-brandPrimary">${j.highlightProject || 'Dual MSc AI + Software Engineering background'}</strong>
                         </div>
                     </div>
 
@@ -746,7 +1091,6 @@
             `).join('');
         }
 
-
         // Render Top Priority Cards
         function renderTop5() {
             const container = document.getElementById('top5-container');
@@ -761,6 +1105,7 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pr-16">
                         <div>
                             <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${j.verif}</span>
+                            ${j.isInternship ? '<span class="ml-1 text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">Internship</span>' : ''}
                             <h2 class="text-lg font-bold text-brandPrimary mt-1">${j.title}</h2>
                             <p class="text-xs text-brandMuted font-medium">${j.company} • ${j.location} (${j.setup})</p>
                         </div>
@@ -777,7 +1122,7 @@
                         </div>
                         <div>
                             <span class="text-brandMuted block font-medium">Recommended Pitch Project:</span>
-                            <strong class="text-brandPrimary">${j.highlightProject}</strong>
+                            <strong class="text-brandPrimary">${j.highlightProject || 'Dual MSc AI + Software Engineering background'}</strong>
                         </div>
                     </div>
 
@@ -813,7 +1158,10 @@
                         </span>
                     </td>
                     <td class="p-3">
-                        <div class="font-bold text-brandPrimary">${j.title}</div>
+                        <div class="font-bold text-brandPrimary flex items-center gap-1.5 flex-wrap">
+                            ${j.title}
+                            ${j.isInternship ? '<span class="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold uppercase">Internship</span>' : ''}
+                        </div>
                         <div class="text-[11px] text-brandMuted">${j.company}</div>
                     </td>
                     <td class="p-3">
@@ -863,7 +1211,10 @@
                             ${tierJobs.map(j => `
                                 <div onclick="openModal(${j.rank})" class="bg-brandSurface p-3 rounded-lg border border-brandBorder shadow-sm hover:border-brandAccent cursor-pointer transition space-y-1.5">
                                     <div class="flex justify-between items-start">
-                                        <h4 class="font-bold text-xs text-brandPrimary">${j.title}</h4>
+                                        <h4 class="font-bold text-xs text-brandPrimary flex items-center gap-1.5 flex-wrap">
+                                            ${j.title}
+                                            ${j.isInternship ? '<span class="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold uppercase">Internship</span>' : ''}
+                                        </h4>
                                         <span class="text-xs font-extrabold text-brandAccent">${j.score}% Score</span>
                                     </div>
                                     <p class="text-[11px] text-brandMuted">${j.company} • ${j.location}</p>
@@ -880,7 +1231,42 @@
             }).join('');
         }
 
-        // Apply Multi-tier Filters
+        // Render Internships Table View
+        function renderInternshipsTable(data) {
+            const tbody = document.getElementById('internships-tbody');
+            tbody.innerHTML = data.map(j => `
+                <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openModal(${j.rank})">
+                    <td class="p-3 font-bold text-brandMuted">#${j.rank}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${j.priority === 1 ? 'bg-red-50 text-red-700 border border-red-200' : j.priority === 2 ? 'bg-blue-50 text-blue-700 border border-blue-200' : j.priority === 3 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700'}">
+                            Priority ${j.priority}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <div class="font-bold text-brandPrimary flex items-center gap-1.5 flex-wrap">
+                            ${j.title}
+                            <span class="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-bold uppercase">Internship</span>
+                        </div>
+                        <div class="text-[11px] text-brandMuted">${j.company}</div>
+                    </td>
+                    <td class="p-3">
+                        <div>${j.location}</div>
+                        <div class="text-[11px] text-brandMuted">${j.setup}</div>
+                    </td>
+                    <td class="p-3 font-extrabold text-brandAccent">${j.score}%</td>
+                    <td class="p-3">
+                        <span class="${j.remoteStatus.includes('Confirmed') || j.remoteStatus.includes('Milan') || j.remoteStatus.includes('Commutable') ? 'text-emerald-600 font-semibold' : 'text-brandMuted'}">
+                            ${j.remoteStatus.includes('Milan') ? '✓ Milan On-site' : j.remoteStatus.includes('Confirmed') ? '✓ Remote IT' : 'Restricted / Visa'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button class="text-brandAccent hover:underline font-medium">View Analysis ↗</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Apply Multi-tier Filters for Master Repository
         function applyFilters() {
             const pVal = document.getElementById('filter-priority').value;
             const rVal = document.getElementById('filter-remote').value;
@@ -911,12 +1297,52 @@
             document.getElementById('showing-count').innerText = `Showing ${filtered.length} of ${jobsData.length} verified vacancies`;
         }
 
+        // Apply Filters for Internships Tab
+        function applyInternshipFilters() {
+            const pVal = document.getElementById('filter-internship-priority').value;
+            const rVal = document.getElementById('filter-internship-remote').value;
+            const searchVal = document.getElementById('search-internship-input').value.toLowerCase();
+
+            const internshipsOnly = jobsData.filter(j => j.isInternship);
+
+            const filtered = internshipsOnly.filter(j => {
+                const matchP = pVal === 'ALL' || j.priority.toString() === pVal;
+                
+                let matchR = true;
+                if (rVal === 'MILAN') {
+                    matchR = j.location.toLowerCase().includes('milan') || j.location.toLowerCase().includes('rozzano');
+                } else if (rVal === 'REMOTE_IT') {
+                    matchR = j.remoteStatus.includes('Confirmed') || j.remoteStatus.includes('Milan') || j.remoteStatus.includes('Commutable');
+                } else if (rVal === 'EU_HYBRID') {
+                    matchR = j.sponsorship.includes('Confirmed') || j.remoteStatus.includes('EU');
+                }
+
+                const matchS = j.title.toLowerCase().includes(searchVal) || 
+                               j.company.toLowerCase().includes(searchVal) || 
+                               j.match.toLowerCase().includes(searchVal) ||
+                               j.location.toLowerCase().includes(searchVal);
+
+                return matchP && matchR && matchS;
+            });
+
+            renderInternshipsTable(filtered);
+            document.getElementById('showing-internships-count').innerText = `Showing ${filtered.length} of ${internshipsOnly.length} internships`;
+        }
+
         // Modal Control
         function openModal(rank) {
             const job = jobsData.find(j => j.rank === rank);
             if (!job) return;
 
             document.getElementById('modal-priority').innerText = `Priority Tier ${job.priority}`;
+            
+            const badgeInternship = document.getElementById('modal-badge-internship');
+            if (job.isInternship) {
+                badgeInternship.classList.remove('hidden');
+            } else {
+                badgeInternship.classList.add('hidden');
+            }
+
             document.getElementById('modal-title').innerText = job.title;
             document.getElementById('modal-company').innerText = `${job.company} • ${job.location} (${job.setup})`;
             document.getElementById('modal-score').innerText = `${job.score}%`;
@@ -976,7 +1402,7 @@
                         data: [
                             jobsData.filter(j => j.location.toLowerCase().includes('milan') || j.location.toLowerCase().includes('rozzano') || j.location.toLowerCase().includes('cremona')).length,
                             jobsData.filter(j => j.remoteStatus.includes('Confirmed')).length,
-                            jobsData.filter(j => j.sponsorship.includes('Confirmed') || j.location.includes('Germany') || j.location.includes('France')).length,
+                            jobsData.filter(j => j.sponsorship.includes('Confirmed') || j.location.includes('Germany') || j.location.includes('France') || j.location.includes('Switzerland')).length,
                             jobsData.filter(j => j.remoteStatus.includes('Restricted')).length
                         ],
                         backgroundColor: '#2B6CB0'
@@ -997,7 +1423,10 @@
 
         // Dynamic Header Stat Update
         function updateStats() {
-            document.getElementById('stat-total').innerText = jobsData.length;
+            const totalCount = jobsData.length;
+            document.getElementById('stat-total').innerText = totalCount;
+            document.querySelectorAll('.stat-total-inline').forEach(el => el.innerText = totalCount);
+
             document.getElementById('stat-p1').innerText = jobsData.filter(j => j.priority === 1).length;
             const italyCount = jobsData.filter(j => j.location.toLowerCase().includes('milan') || j.remoteStatus.includes('Confirmed')).length;
             document.getElementById('stat-italy').innerText = italyCount;
@@ -1010,6 +1439,7 @@
             renderTop5();
             renderTable(jobsData);
             renderGrouped(jobsData);
+            renderInternshipsTable(jobsData.filter(j => j.isInternship));
         });
     </script>
 </body>
