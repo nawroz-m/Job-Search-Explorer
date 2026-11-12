@@ -760,7 +760,8 @@
                 verif: "Level A (Job ID: 34171)",
                 date: "October 2026",
                 link: "https://join.pmicareers.com/gb/en/job/34171/AI-Data-Science-Intern",
-                isInternship: true
+                isInternship: true,
+                status: "rejected"
             },
             {
                 rank: 50,
@@ -1150,7 +1151,7 @@
         function renderTable(data) {
             const tbody = document.getElementById('repository-tbody');
             tbody.innerHTML = data.map(j => `
-                <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openModal(${j.rank})">
+                <tr class="hover:bg-slate-50 cursor-pointer transition ${j.status === 'rejected' ? 'bg-red-100' : ''}" onclick="openModal(${j.rank})">
                     <td class="p-3 font-bold text-brandMuted">#${j.rank}</td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${j.priority === 1 ? 'bg-red-50 text-red-700 border border-red-200' : j.priority === 2 ? 'bg-blue-50 text-blue-700 border border-blue-200' : j.priority === 3 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700'}">
@@ -1235,7 +1236,7 @@
         function renderInternshipsTable(data) {
             const tbody = document.getElementById('internships-tbody');
             tbody.innerHTML = data.map(j => `
-                <tr class="hover:bg-slate-50 cursor-pointer transition" onclick="openModal(${j.rank})">
+                <tr class="hover:bg-slate-50 cursor-pointer transition ${j.status === 'rejected' ? 'bg-red-100' : ''}" onclick="openModal(${j.rank})">
                     <td class="p-3 font-bold text-brandMuted">#${j.rank}</td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${j.priority === 1 ? 'bg-red-50 text-red-700 border border-red-200' : j.priority === 2 ? 'bg-blue-50 text-blue-700 border border-blue-200' : j.priority === 3 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700'}">
